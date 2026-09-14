@@ -49,6 +49,7 @@ const config: ForgeConfig = {
         priority: 'optional',
         categories: ['Development'],
         icon: linuxIcon,
+        bin: 'SpokeUI',
       },
     }, ['linux']),
   ],
