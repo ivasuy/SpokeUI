@@ -71,4 +71,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mapfile -d '' files < <(find release-assets -type f -print0)
-          gh release create "$GITHUB_REF_NAME" "${files[@]}" --generate-notes --title "SpokeUI $GITHUB_REF_NAME"
+          gh release create "$GITHUB_REF_NAME" "${files[@]}" --repo "$GITHUB_REPOSITORY" --generate-notes --title "SpokeUI $GITHUB_REF_NAME"
