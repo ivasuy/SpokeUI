@@ -1,5 +1,9 @@
 # SpokeUI
 
+<p align="center">
+  <img src="apps/landing/public/assets/spokeui-icon.png" width="96" height="96" alt="SpokeUI logo" />
+</p>
+
 A local desktop workspace for creating and refining web interfaces through speech and direct interaction. A connected agent runtime changes the source; the embedded browser shows the running result.
 
 The first working milestone is implemented. It runs as a single Electron application and includes:
@@ -37,6 +41,15 @@ Requirements: Node.js 22+, pnpm 11+, and an authenticated Codex or Claude Code i
 ```bash
 pnpm install
 pnpm start
+```
+
+The repository is a pnpm workspace. The Electron desktop application lives at the repository root, while the marketing site lives in `apps/landing`.
+
+To run or build the landing page:
+
+```bash
+pnpm landing:dev
+pnpm landing:build
 ```
 
 Copy `.env.example` to `.env` and set `ASSEMBLYAI_API_KEY`, or enter the key in Connections inside the workspace. The desktop app stores a key entered through Connections in Electron's encrypted local storage when operating-system encryption is available. Credentials and local settings are never committed.

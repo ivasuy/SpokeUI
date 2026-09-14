@@ -1,6 +1,8 @@
 blockExoticSubdeps: false
 nodeLinker: hoisted
 confirmModulesPurge: false
+packages:
+  - apps/*
 allowBuilds:
   electron: true
   electron-winstaller: true

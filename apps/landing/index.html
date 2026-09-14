@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#12151c" />
+    <meta name="description" content="SpokeUI is a voice-first visual IDE for building and debugging web interfaces with local coding agents." />
+    <link rel="icon" href="/assets/spokeui-icon.png" />
+    <title>SpokeUI — Point. Speak. Ship.</title>
+  </head>
+  <body>
+    <div class="site-grid" aria-hidden="true"></div>
+
+    <header class="site-nav">
+      <a class="brand" href="#top" aria-label="SpokeUI home">
+        <img src="/assets/spokeui-icon.png" alt="" />
+        <span>SpokeUI</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#vision">Vision</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#review">Review</a>
+        <a href="#debug">Debug</a>
+        <a href="#runtime">Runtime</a>
+        <a href="https://github.com/ivasuy/SpokeUI" target="_blank" rel="noreferrer">GitHub</a>
+      </nav>
+      <a class="nav-cta" href="https://github.com/ivasuy/SpokeUI/releases/tag/v0.1.2" data-download-cta data-download-label-style="short"><span data-download-label>Download</span></a>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-backdrop" aria-hidden="true">
+          <canvas data-shader="topo"></canvas>
+          <div class="scanlines"></div>
+        </div>
+        <div class="hero-content page-width">
+          <div class="hero-kicker">Voice-first interface development <em>01 / 05</em></div>
+          <h1><span>Point.</span><span>Speak.</span><span class="accent-word">Ship.</span></h1>
+          <div class="hero-copy-row">
+            <p>Select any interface element, say what should change, and watch your local coding agent edit the real source.</p>
+            <div class="hero-downloads">
+              <a class="hero-download" href="https://github.com/ivasuy/SpokeUI/releases/tag/v0.1.2" data-download-cta>
+                <span><strong data-download-label>Download SpokeUI</strong><small data-download-meta>Choose your platform</small></span>
+                <i aria-hidden="true">↓</i>
+              </a>
+              <details class="download-options">
+                <summary>Other platforms</summary>
+                <div class="download-menu">
+                  <a href="https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/SpokeUI-0.1.2-arm64.dmg"><span>macOS</span><small>Apple Silicon · DMG</small></a>
+                  <a href="https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/SpokeUI-0.1.2-x64.dmg"><span>macOS</span><small>Intel · DMG</small></a>
+                  <a href="https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/SpokeUI-0.1.2.Setup.exe"><span>Windows</span><small>x64 · Installer</small></a>
+                  <a href="https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/spokeui_0.1.2_amd64.deb"><span>Linux</span><small>x64 · Debian package</small></a>
+                  <a href="https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/SpokeUI-linux-x64-0.1.2.zip"><span>Linux</span><small>x64 · Portable ZIP</small></a>
+                  <a href="https://github.com/ivasuy/SpokeUI/releases/tag/v0.1.2"><span>All downloads</span><small>Checksums and portable builds</small></a>
+                </div>
+              </details>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-product" id="demo">
+          <div class="product-glow" aria-hidden="true"></div>
+          <div class="app-window">
+            <div class="demo-titlebar">
+              <div class="window-lights"><i></i><i></i><i></i></div>
+              <strong><img src="/assets/spokeui-icon.png" alt="" /> Project</strong>
+              <span><i></i> Voice ready</span>
+            </div>
+            <div class="hero-demo" aria-label="SpokeUI live editing a sample website">
+              <aside class="demo-navigator">
+                <small>WORKSPACE</small>
+                <button class="active"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg> Preview</button>
+                <button><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3Z"/></svg> Terminal</button>
+                <button><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.9 19.1a10 10 0 0 1 0-14.2M7.8 16.2a6 6 0 0 1 0-8.4M19.1 4.9a10 10 0 0 1 0 14.2M16.2 7.8a6 6 0 0 1 0 8.4"/><circle cx="12" cy="12" r="2"/></svg> Session</button>
+                <button><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M7 5V3h5l2 2"/></svg> Projects</button>
+              <small>NAVIGATOR</small>
+                <div class="demo-tree"><span>⌄ Page</span><span>└ main</span><strong>└ button.primary</strong></div>
+              </aside>
+              <div class="demo-canvas">
+                <div class="demo-browserbar"><span>←</span><span>↻</span><p>localhost:3000</p><em>Desktop</em></div>
+                <div class="demo-site">
+                  <nav><strong>Northstar</strong><div><span>Work</span><span>Process</span><span>Journal</span></div><button>Start a project</button></nav>
+                  <div class="demo-site-hero">
+                    <div class="demo-site-copy"><small>INDEPENDENT DIGITAL STUDIO</small><h2>Interfaces that<br />listen.</h2><p>We turn a clear product point of view into a precise, expressive interface.</p><div class="demo-cta-target"><button>Explore the system <span>↗</span></button><div class="demo-selection"><span>button.primary</span></div></div></div>
+                    <div class="demo-site-visual"><div class="demo-orbit"><i></i><i></i><i></i><i></i></div><small>VOICE SIGNAL / LIVE</small></div>
+                  </div>
+                  <div class="demo-site-foot"><span>Selected component</span><strong>button.primary</strong><em>Updated now</em></div>
+                </div>
+                <div class="demo-runtime"><i></i><div><small>AGENT RUNTIME</small><strong>Applying spacing and contrast</strong></div><em>2 files · +18 −6</em></div>
+              </div>
+              <aside class="demo-inspector">
+                <header>Inspector <span>◫</span></header>
+                <div class="demo-inspector-target"><i>&lt;/&gt;</i><div><strong>&lt;button&gt;</strong><small>132 × 42</small></div></div>
+                <code>main.hero &gt; button.primary</code>
+                <section><small>LAYOUT</small><p><span>display</span><strong>flex</strong></p><p><span>padding</span><strong>12 × 18</strong></p><p><span>gap</span><strong>8px</strong></p></section>
+                <section><small>APPEARANCE</small><p><span>background</span><strong>#1455ff</strong></p><p><span>radius</span><strong>8px</strong></p></section>
+              </aside>
+            </div>
+            <div class="voice-command">
+              <button class="voice-orb" aria-label="Voice request demo"><span></span><span></span><span></span><span></span></button>
+              <div><small>VOICE REQUEST</small><strong>Make this interface feel more focused and calm.</strong></div>
+              <i>↗</i>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-meta page-width"><span>Realtime speech</span><span>Local codebase</span><span>Live preview</span><span>Agent runtime</span></div>
+      </section>
+
+      <section class="manifesto light-section" id="vision">
+        <div class="page-width">
+          <div class="section-index"><span>THE INTERFACE IS THE PROMPT</span><em>02 / 05</em></div>
+          <h2 data-fill-text>You already know what feels wrong. Now you can point at it and say what should happen next.</h2>
+          <div class="manifesto-foot">
+            <p>SpokeUI turns visual context and natural speech into grounded source edits. No selector hunting. No translating pixels into tickets.</p>
+            <div class="signal-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workflow light-section" id="workflow">
+        <div class="workflow-header page-width">
+          <div class="section-index"><span>ONE CONTINUOUS LOOP</span><em>03 / 05</em></div>
+          <h2>From intent to interface,<br />without leaving the preview.</h2>
+        </div>
+        <div class="workflow-stage page-width">
+          <div class="workflow-steps" role="list">
+            <article class="workflow-step active" data-step="0" role="listitem">
+              <span>01</span><div><h3>Select precisely</h3><p>Hover the running app and choose the exact component, including tiny icons and nested controls.</p></div>
+            </article>
+            <article class="workflow-step" data-step="1" role="listitem">
+              <span>02</span><div><h3>Speak the outcome</h3><p>Live transcription captures your request while SpokeUI packages DOM, styles, geometry, console, and network context.</p></div>
+            </article>
+            <article class="workflow-step" data-step="2" role="listitem">
+              <span>03</span><div><h3>Watch source become UI</h3><p>Your agent runtime edits locally. HMR updates the preview while the agent response stays visible.</p></div>
+            </article>
+          </div>
+          <div class="workflow-visual">
+            <div class="screenshot-frame">
+              <div class="screenshot-top"><span><i></i><i></i><i></i></span><strong>Live website</strong><em>studio.local</em></div>
+              <div class="workflow-web-preview" aria-label="A live website changing in response to an agent request">
+                <nav><strong>Fieldwork®</strong><div><span>Studio</span><span>Archive</span><span>Contact</span></div><button>Start a project</button></nav>
+                <section>
+                  <div class="workflow-web-copy"><small>CREATIVE TECHNOLOGY / 2026</small><div class="workflow-title-target"><h3>Digital spaces<br />with a pulse.</h3><div class="workflow-web-selection"><span>h1.hero</span></div></div><p>Independent design and development for products that deserve a point of view.</p><button>View selected work <span>↗</span></button></div>
+                  <figure>
+                    <div class="interface-visual">
+                      <div class="interface-card voice-card"><header><span></span><small>VOICE SIGNAL</small><em>LIVE</em></header><div class="interface-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><strong>Listening</strong><p>Intent mapped to <code>h1.hero</code></p></div>
+                      <div class="interface-card component-card"><header><small>COMPONENT</small><em>01</em></header><div><span></span><span></span><span></span></div><strong>Hero heading</strong><p>Visual context attached</p></div>
+                    </div>
+                    <figcaption><strong>LIVE INTERFACE</strong><small>Voice → context → source</small></figcaption>
+                  </figure>
+                </section>
+                <footer><span>Berlin · London · Everywhere</span><em>Scroll to explore ↓</em></footer>
+                <div class="workflow-web-change"><i></i><div><small>AGENT RUNTIME</small><strong>Updating hero typography</strong></div><em>HMR · now</em></div>
+                <div class="workflow-web-response"><small>CHANGE APPLIED</small><strong>Hierarchy refined</strong><span>2 files · +18 −6</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="review-section dark-section" id="review">
+        <div class="review-art" aria-hidden="true"><canvas data-shader="waves"></canvas></div>
+        <div class="page-width review-content">
+          <div class="section-index"><span>REVIEW THE RESULT</span><em>04 / 05</em></div>
+          <div class="review-grid">
+            <div class="review-copy">
+              <h2>Every change earns your approval.</h2>
+              <p>SpokeUI captures the selected component before the agent runs, waits for HMR, then shows the rendered result beside the original.</p>
+              <ul>
+                <li><span>01</span> Component before and after</li>
+                <li><span>02</span> Files and line totals</li>
+                <li><span>03</span> Accept or conflict-safe reject</li>
+              </ul>
+            </div>
+            <div class="review-card" data-review-card>
+              <header><div><small>AGENT CHANGE · &lt;hero&gt;</small><strong>Agent runtime</strong></div><em>Review required</em></header>
+              <p>Clarify the hierarchy, surface live intent, and give the primary action more room.</p>
+              <div class="compare-grid">
+                <figure>
+                  <figcaption>BEFORE</figcaption>
+                  <div class="component-preview before-ui">
+                    <div class="component-nav"><strong>Arc Studio</strong><div><span>Work</span><span>About</span><span>Menu</span></div></div>
+                    <div class="component-body">
+                      <div class="component-copy"><small>PRODUCT DESIGN</small><h3>Build faster.</h3><p>A digital studio for ambitious teams and modern products.</p><button class="component-cta">Learn more</button></div>
+                      <div class="signal-panel"><div class="signal-orbit"><i></i><i></i><i></i></div><small>Signal</small><strong>Idle</strong></div>
+                    </div>
+                  </div>
+                </figure>
+                <figure>
+                  <figcaption>AFTER</figcaption>
+                  <div class="component-preview after-ui">
+                    <div class="component-nav"><strong>Arc Studio</strong><div><span>Work</span><span>System</span><span>Menu</span></div></div>
+                    <div class="component-body">
+                      <div class="component-copy"><small>VOICE-FIRST WORKFLOW</small><h3>Shape what you see.</h3><p>Select a component, speak the change, and review the result live.</p><button class="component-cta">Start speaking <span>↗</span></button></div>
+                      <div class="signal-panel"><div class="signal-orbit"><i></i><i></i><i></i></div><small>Live intent</small><strong>Listening</strong><em>Context linked</em></div>
+                    </div>
+                  </div>
+                </figure>
+              </div>
+              <div class="change-total"><strong>3 files changed</strong><span>+42</span><em>−18</em></div>
+              <footer><button>Detailed review</button><button class="reject-button">Reject</button><button class="accept-button">Accept</button></footer>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="debug-section light-section" id="debug">
+        <div class="page-width">
+          <div class="section-index"><span>DEBUG WHERE YOU POINT</span><em>05 / 05</em></div>
+          <div class="debug-heading"><h2>Right-click the problem.<br />Ask with context.</h2><p>SpokeUI connects the rendered element to the evidence your agent needs, then keeps its answer over the live preview.</p></div>
+          <div class="debug-demo">
+            <div class="debug-shot">
+              <img src="/assets/spokeui-preview-public.png" alt="SpokeUI inspecting a selected element in a live preview" />
+            </div>
+            <div class="debug-menu" aria-label="Element actions">
+              <small>ELEMENT ACTIONS</small>
+              <button type="button" class="active" aria-pressed="true">Ask agent about this</button>
+              <button type="button" aria-pressed="false">Explain this component</button>
+              <button type="button" aria-pressed="false">Find source</button>
+              <i></i>
+              <button type="button" aria-pressed="false">Find console errors</button>
+              <button type="button" aria-pressed="false">Find network requests</button>
+              <button type="button" aria-pressed="false">Find responsive issues</button>
+            </div>
+            <div class="agent-answer"><header><span class="live-dot"></span> Agent response</header><p>The selected component is rendered by <code>src/app/page.tsx</code>. Its failure originates in a duplicate seeding call, not the component layout.</p><footer>Source + console + network attached</footer></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="runtime-strip" id="runtime">
+        <div class="page-width runtime-grid">
+          <p>Bring the tools you already use.</p>
+          <div class="runtime-name"><span>01</span><strong>Voice input</strong><small>Live transcription</small></div>
+          <div class="runtime-name"><span>02</span><strong>Agent runtime</strong><small>Local source edits</small></div>
+          <div class="runtime-name"><span>03</span><strong>Your codebase</strong><small>Any web stack</small></div>
+          <div class="runtime-name"><span>04</span><strong>Live preview</strong><small>Rendered feedback</small></div>
+        </div>
+      </section>
+
+      <section class="final-cta dark-section">
+        <div class="cta-field" aria-hidden="true"><canvas data-shader="waves"></canvas></div>
+        <div class="page-width cta-content">
+          <img class="cta-logo" src="/assets/spokeui-icon.png" alt="" />
+          <p>THE VISUAL IDE THAT LISTENS</p>
+          <h2>Stop describing the screen.<br />Start speaking to it.</h2>
+          <a class="primary-cta" href="https://github.com/ivasuy/SpokeUI/releases/tag/v0.1.2" data-download-cta><span data-download-label>Download SpokeUI</span><i>↓</i></a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand" href="#top"><img src="/assets/spokeui-icon.png" alt="" /><span>SpokeUI</span></a>
+      <p>Built for voice-first interface development.</p>
+      <div class="footer-links">
+        <a href="https://github.com/ivasuy/SpokeUI" target="_blank" rel="noreferrer">GitHub ↗</a>
+        <span>Local-first · Voice-first · Interface-first</span>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

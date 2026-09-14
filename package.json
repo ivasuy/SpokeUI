@@ -19,6 +19,9 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
+    "landing:dev": "pnpm --dir apps/landing dev",
+    "landing:build": "pnpm --dir apps/landing build",
+    "landing:preview": "pnpm --dir apps/landing preview",
     "typecheck": "tsc --noEmit",
     "build": "pnpm typecheck && electron-forge package",
     "release:local": "pnpm typecheck && electron-forge make"
