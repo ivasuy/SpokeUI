@@ -59,9 +59,9 @@ p, h1, h2, h3 { margin: 0; }
 .hero h1 { max-width: none; margin-top: 64px; display: flex; align-items: baseline; gap: .1em; white-space: nowrap; font-size: clamp(70px, 8vw, 128px); font-weight: 760; line-height: .82; letter-spacing: -.085em; }
 .hero h1 > span { display: block; overflow: visible; padding: 0 .07em .12em 0; }
 .hero h1 .accent-word { color: #5d87ff; }
-.hero-copy-row { width: min(900px, 78%); margin-top: 28px; display: grid; grid-template-columns: minmax(280px, 1fr) 270px; align-items: start; gap: 46px; }
+.hero-copy-row { width: min(520px, 100%); margin-top: 28px; }
 .hero-copy-row p { max-width: 520px; color: rgba(247,243,234,.72); font-size: clamp(16px, 1.5vw, 22px); line-height: 1.4; letter-spacing: -.025em; }
-.hero-downloads { position: relative; }
+.hero-downloads { position: relative; width: min(290px, 100%); margin-top: 22px; }
 .hero-download { min-height: 58px; display: grid; grid-template-columns: 1fr 36px; align-items: center; gap: 16px; padding: 8px 10px 8px 16px; color: var(--ink); background: var(--paper); border: 1px solid rgba(255,255,255,.36); border-radius: 11px; box-shadow: 0 16px 38px rgba(0,0,0,.2); transition: transform 180ms ease, background 180ms ease; }
 .hero-download:hover { transform: translateY(-2px); background: #fffdfa; }
 .hero-download strong, .hero-download small { display: block; }
@@ -412,7 +412,7 @@ p, h1, h2, h3 { margin: 0; }
   .hero { height: 1430px; }
   .hero-backdrop { height: 850px; }
   .hero h1 { margin-top: 80px; display: block; white-space: normal; font-size: clamp(68px, 13.2vw, 122px); }
-  .hero-copy-row { width: min(760px, 85%); grid-template-columns: minmax(260px, 1fr) 250px; gap: 30px; }
+  .hero-copy-row { width: min(520px, 85%); }
   .hero-product { top: 620px; }
   .hero-demo { grid-template-columns: 110px minmax(0,1fr); height: 540px; }
   .demo-inspector { display: none; }
@@ -441,7 +441,7 @@ p, h1, h2, h3 { margin: 0; }
   .hero-content { padding-top: 112px; }
   .hero-kicker em { display: none; }
   .hero h1 { margin-top: 50px; font-size: clamp(66px, 23vw, 110px); }
-  .hero-copy-row { width: 100%; margin-top: 28px; grid-template-columns: 1fr; gap: 22px; }
+  .hero-copy-row { width: 100%; margin-top: 28px; }
   .hero-copy-row p { font-size: 16px; }
   .hero-downloads { width: min(290px, 100%); }
   .download-menu { width: min(292px, calc(100vw - 28px)); }
