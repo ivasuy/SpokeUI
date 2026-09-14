@@ -1,0 +1,19 @@
+{
+  "name": "voice-ui-starter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "6.1.1",
+    "vite": "8.2.2",
+    "typescript": "7.0.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "lucide-react": "1.43.0"
+  },
+  "devDependencies": {}
+}
