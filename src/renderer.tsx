@@ -303,7 +303,9 @@ function App() {
   const [projectsError, setProjectsError] = useState('');
   const [projectPage, setProjectPage] = useState(0);
   const [project, setProject] = useState<ProjectInfo | null>(null);
-  const [selection, setSelection] = useState<ElementSnapshot | null>(null);
+  const [selections, setSelections] = useState<ElementSnapshot[]>([]);
+  const selection = selections.at(-1) ?? null;
+  const selectionHint = /Mac/.test(navigator.platform) ? '⌘-click to add or remove elements' : 'Ctrl-click to add or remove elements';
   const [previewUrl, setPreviewUrl] = useState('');
   const [previewState, setPreviewState] = useState<PreviewState>({ phase: 'idle', message: 'Waiting for a project' });
   const [projectState, setProjectState] = useState<ProjectState>({ phase: 'idle', message: 'No project running' });
@@ -350,7 +352,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const previewVisible = workspaceView === 'preview';
+    const previewVisible = workspaceView === 'preview' && Boolean(project);
     void window.appApi.preview.show(previewVisible);
     if (!previewVisible) return;
     syncPreviewBounds();
@@ -358,7 +360,7 @@ function App() {
     if (previewSlot.current) observer.observe(previewSlot.current);
     window.addEventListener('resize', syncPreviewBounds);
     return () => { observer.disconnect(); window.removeEventListener('resize', syncPreviewBounds); };
-  }, [workspaceView, syncPreviewBounds]);
+  }, [workspaceView, project, syncPreviewBounds]);
 
   useEffect(() => {
     if (!viewportMenuOpen) return;
@@ -400,7 +402,7 @@ function App() {
       })
       .catch(() => setRuntimeState({ phase: 'error', name: 'Agent runtime', message: 'Runtime check failed' }));
     const cleanups = [
-      window.appApi.onElementSelected((value) => setSelection(value)),
+      window.appApi.onElementSelected((value) => setSelections(value)),
       window.appApi.onPreviewState((state) => { setPreviewState(state); if (state.url) setPreviewUrl(state.url); }),
       window.appApi.onProjectState((state) => {
         setProjectState(state);
@@ -501,7 +503,7 @@ function App() {
     setWorkspaceView('preview');
     setViewportMenuOpen(false);
     setProject(next);
-    setSelection(null);
+    setSelections([]);
     setInstruction(initialInstruction);
     setTaskState({ phase: 'idle', message: 'Ready for a request' });
     setActivity([]);
@@ -545,6 +547,20 @@ function App() {
     setProjectsError('');
     try {
       await window.appApi.project.remove(item.id);
+      if (item.root === project?.root) {
+        setProject(null);
+        setSelections([]);
+        setPreviewUrl('');
+        setPreviewState({ phase: 'idle', message: 'Waiting for a project' });
+        setProjectState({ phase: 'idle', message: 'No project running' });
+        setProjectLogs('');
+        setInstruction('');
+        setActivity([]);
+        setTaskState({ phase: 'idle', message: 'Ready for a request' });
+        setSessionId(createSessionId());
+        setSessionStartedAt(Date.now());
+        setWorkspaceView('projects');
+      }
     } catch (error) {
       setProjectsError((error as Error).message || 'The project could not be removed.');
     }
@@ -630,6 +646,11 @@ function App() {
     localStorage.setItem('spokeui:reasoning-effort', effort);
   }
 
+  async function removeTarget(selector?: string) {
+    setSelections((current) => selector === undefined ? [] : current.filter((item) => item.selector !== selector));
+    await window.appApi.preview.removeTarget(selector);
+  }
+
   function suggestChange(property: string, value: string) {
     setInstruction(`Change the selected element’s ${property}. It is currently ${value || 'unset'}. `);
   }
@@ -674,7 +695,7 @@ function App() {
     }
   }
 
-  async function runAgentRequest(requestText: string, target: ElementSnapshot | null, debugAction?: DebugAction) {
+  async function runAgentRequest(requestText: string, targets: ElementSnapshot[], debugAction?: DebugAction) {
     if (!requestText.trim() || !project || working || runtimeState.phase !== 'ready') {
       if (debugAction) {
         const message = !project ? 'Open a project before asking the agent.' : working ? 'Wait for the current agent request to finish.' : runtimeState.message;
@@ -686,7 +707,7 @@ function App() {
     setActivity((current) => [...current, { id: createSessionId(), tone: 'request', text: requestText, at: Date.now() }]);
     setWorkspaceView('preview');
     try {
-      await window.appApi.runtime.run({ runtime: agentRuntime, projectRoot: project.root, instruction: requestText, url: previewUrl, target, model: sessionModel, reasoningEffort, debugAction });
+      await window.appApi.runtime.run({ runtime: agentRuntime, projectRoot: project.root, instruction: requestText, url: previewUrl, target: targets.at(-1) ?? null, targets, model: sessionModel, reasoningEffort, debugAction });
       if (!debugAction) setInstruction('');
     } catch (error) {
       if (debugAction) await window.appApi.preview.showMessage('Agent request failed', (error as Error).message || 'The request could not be completed.');
@@ -698,12 +719,12 @@ function App() {
   }
 
   async function applyInstruction() {
-    await runAgentRequest(instruction.trim(), selection);
+    await runAgentRequest(instruction.trim(), [...selections]);
   }
 
   useEffect(() => window.appApi.onPreviewDebugAction((input: PreviewDebugAction) => {
-    setSelection(input.target);
-    void runAgentRequest(debugPrompts[input.action], input.target, input.action);
+    setSelections([input.target]);
+    void runAgentRequest(debugPrompts[input.action], [input.target], input.action);
   }), [project, working, runtimeState.phase, previewUrl, agentRuntime, sessionModel, reasoningEffort]);
 
   async function startRecording() {
@@ -854,14 +875,14 @@ function App() {
               })}
             </div>
           </div>
-          <div className="rail-tip"><Inspect size={16} /><p>Hover to inspect. Click an outlined element to add it as the edit target.</p></div>
+          <div className="rail-tip"><Inspect size={16} /><p>Click to select an element. {selectionHint}.</p></div>
         </aside>
 
         <main className="canvas-column">
           {workspaceView === 'preview' && <>
             <div className="browser-bar">
-              <button className="icon-button compact" onClick={() => window.appApi.preview.back()} aria-label="Back"><ArrowLeft size={15} /></button>
-              <button className="icon-button compact" onClick={() => window.appApi.preview.reload()} aria-label="Reload"><RefreshCw size={14} /></button>
+              <button className="icon-button compact" onClick={() => window.appApi.preview.back()} disabled={!project} aria-label="Back"><ArrowLeft size={15} /></button>
+              <button className="icon-button compact" onClick={() => window.appApi.preview.reload()} disabled={!project} aria-label="Reload"><RefreshCw size={14} /></button>
               <div className="address"><Globe2 size={13} /><span>{previewUrl || 'Preview'}</span></div>
               <div className="viewport-control" ref={viewportControl}>
                 {!viewportMenuOpen ? <button className="viewport" onClick={() => { setSettingsOpen(false); setViewportMenuOpen(true); }} aria-expanded={false} aria-haspopup="menu">
@@ -872,7 +893,17 @@ function App() {
               <button className={`preview-changes-button ${pendingChanges ? 'pending' : ''}`} onClick={() => void window.appApi.preview.showChanges(project?.root)} disabled={!project} title="Open component history"><History size={14} /><span>Changes</span>{pendingChanges > 0 && <em>{pendingChanges}</em>}</button>
               <button className="icon-button compact" onClick={() => void window.appApi.preview.openExternal()} disabled={!previewUrl.startsWith('http')} aria-label="Open preview in default browser"><ExternalLink size={14} /></button>
             </div>
-            <div className={`preview-stage viewport-${viewportPreset}`}><div className="preview-slot" ref={previewSlot} /></div>
+            <div className={`preview-stage viewport-${viewportPreset}`}><div className="preview-slot" ref={previewSlot}>
+              {!project && <div className="workspace-empty">
+                <Monitor size={26} aria-hidden="true" />
+                <h2>No preview open</h2>
+                <p>Open a project to see your app here and start making changes.</p>
+                <div className="empty-state-actions">
+                  <button className="new-session-button" onClick={() => void openExisting()}><FolderOpen size={14} /> Open project</button>
+                  <button className="quiet-action" onClick={() => setWizardOpen(true)}><Plus size={14} /> New project</button>
+                </div>
+              </div>}
+            </div></div>
           </>}
 
           {workspaceView === 'terminal' && <>
@@ -937,7 +968,7 @@ function App() {
             <section className="project-manager-view">
               <div className="project-manager-content">
                 {projectsLoading ? <div className="manager-empty"><LoaderCircle className="spin" size={16} /> Loading projects…</div>
-                  : projects.length === 0 ? <div className="manager-empty"><FolderOpen size={23} /><strong>No projects yet</strong><p>Create a project or open an existing folder to begin.</p></div>
+                  : projects.length === 0 ? <div className="workspace-empty"><FolderOpen size={26} aria-hidden="true" /><h2>No projects yet</h2><p>Open an existing project folder or create your first project to begin.</p><div className="empty-state-actions"><button className="new-session-button" onClick={() => void openExisting()}><FolderOpen size={14} /> Open project</button><button className="quiet-action" onClick={() => canLeaveCurrentProject(null) && setWizardOpen(true)}><Plus size={14} /> New project</button></div></div>
                   : <div className="workspace-project-list">{visibleProjects.map((item) => {
                   const current = item.root === project?.root;
                   return <article className={`workspace-project-row ${current ? 'current' : ''}`} key={item.id}>
@@ -991,15 +1022,25 @@ function App() {
                   <em className={runtime.available ? 'ready' : 'missing'}>{runtime.available ? 'Ready' : 'Unavailable'}</em>
                 </section>)}
               </div>
+            ) : selections.length > 1 ? (
+              <section className="inspector-section multi-selection">
+                <h3>{selections.length} elements selected</h3>
+                <p className="selection-hint">{selectionHint}. Your request applies to all selected elements.</p>
+                {selections.map((item, index) => <div className="selected-target-row" key={item.selector}>
+                  <span>{index + 1}</span><code title={item.selector}>{item.selector}</code>
+                  <button aria-label={`Remove ${item.selector} from selection`} onClick={() => void removeTarget(item.selector)}><X size={14} /></button>
+                </div>)}
+                <button className="clear-targets" onClick={() => void removeTarget()}>Clear selection</button>
+              </section>
             ) : selection ? (
               <>
-                <section className="inspector-section selection-section"><SelectionSummary selection={selection} /></section>
+                <section className="inspector-section selection-section"><SelectionSummary selection={selection} /><p className="selection-hint">{selectionHint}</p></section>
                 <section className="inspector-section"><h3>Layout</h3>{['display', 'width', 'height', 'padding', 'gap'].map((key) => <PropertyRow key={key} label={key} value={selection.styles[key]} onUse={() => suggestChange(key, selection.styles[key])} />)}</section>
                 <section className="inspector-section"><h3>Appearance</h3>{['color', 'background-color', 'border-radius'].map((key) => <PropertyRow key={key} label={key} value={selection.styles[key]} onUse={() => suggestChange(key, selection.styles[key])} />)}</section>
                 <section className="inspector-section"><h3>Type</h3>{['font-size', 'font-weight'].map((key) => <PropertyRow key={key} label={key} value={selection.styles[key]} onUse={() => suggestChange(key, selection.styles[key])} />)}</section>
               </>
             ) : (
-              <div className="empty-inspector"><Inspect size={22} /><strong>No element selected</strong><p>Hover over the live preview, then click the element you want to edit.</p></div>
+              <div className="empty-inspector"><Inspect size={22} /><strong>No element selected</strong><p>Hover over the live preview, then click the element you want to edit. {selectionHint}.</p></div>
             )}
           </div>
         </aside>
@@ -1012,8 +1053,10 @@ function App() {
               <span className="voice-orb-core"><span className="voice-bars" aria-hidden="true"><i /><i /><i /></span><Mic size={20} /></span>
             </button>
           </div>
-          <div className="text-composer">
-            {selection && <div className="target-chip"><Inspect size={13} /><span>&lt;{selection.tag}&gt;</span><button onClick={() => setSelection(null)} aria-label="Clear target"><X size={12} /></button></div>}
+          <div className={`text-composer ${selections.length ? 'has-targets' : ''}`}>
+            {selections.length > 0 && <div className="target-chips" aria-label={`${selections.length} selected elements`}>
+              {selections.map((item, index) => <div className="target-chip" key={item.selector} title={item.selector}><Inspect size={13} /><span>{selections.length > 1 ? `${index + 1} · ` : ''}&lt;{item.tag}&gt;{item.id ? `#${item.id}` : ''}</span><button onClick={() => void removeTarget(item.selector)} aria-label={`Remove ${item.selector} from selection`}><X size={12} /></button></div>)}
+            </div>}
             <label className="transcript-field">
               <textarea
                 aria-label="Edit request transcript"

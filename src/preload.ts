@@ -9,6 +9,7 @@ const subscribe = <T>(channel: string, callback: (value: T) => void) => {
 
 const api: AppApi = {
   preview: {
+    removeTarget: (selector) => ipcRenderer.invoke('preview:remove-target', selector),
     setBounds: (bounds: PreviewBounds) => ipcRenderer.invoke('preview:set-bounds', bounds),
     show: (visible: boolean) => ipcRenderer.invoke('preview:show', visible),
     load: (url: string) => ipcRenderer.invoke('preview:load', url),
@@ -44,7 +45,7 @@ const api: AppApi = {
     sendAudio: (chunk) => ipcRenderer.send('voice:audio', chunk),
     stop: () => ipcRenderer.invoke('voice:stop'),
   },
-  onElementSelected: (callback: (snapshot: ElementSnapshot) => void) => subscribe('preview:element-selected', callback),
+  onElementSelected: (callback: (snapshot: ElementSnapshot[]) => void) => subscribe('preview:element-selected', callback),
   onPreviewState: (callback) => subscribe('preview:state', callback),
   onProjectState: (callback: (state: ProjectState) => void) => subscribe('project:state', callback),
   onProjectsChanged: (callback: (projects: StoredProject[]) => void) => subscribe('projects:changed', callback),

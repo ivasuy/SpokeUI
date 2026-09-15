@@ -12,6 +12,19 @@ const windowsIcon = resolve(process.cwd(), 'assets/SpokeUI.ico');
 const linuxIcon = resolve(process.cwd(), 'assets/icon.png');
 const packageIcon = process.platform === 'darwin' ? macIcon : process.platform === 'win32' ? windowsIcon : linuxIcon;
 const appleSigningIdentity = process.env.APPLE_SIGNING_IDENTITY?.trim();
+const appleId = process.env.APPLE_ID?.trim();
+const appleIdPassword = process.env.APPLE_APP_SPECIFIC_PASSWORD?.trim();
+const appleTeamId = process.env.APPLE_TEAM_ID?.trim();
+const hasNotarizationCredentials = Boolean(appleId && appleIdPassword && appleTeamId);
+
+if (process.platform === 'darwin') {
+  if ((appleId || appleIdPassword || appleTeamId) && (!hasNotarizationCredentials || !appleSigningIdentity)) {
+    throw new Error('Notarization requires APPLE_SIGNING_IDENTITY, APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD, and APPLE_TEAM_ID.');
+  }
+  if (process.env.REQUIRE_MAC_NOTARIZATION === 'true' && (!appleSigningIdentity || !hasNotarizationCredentials)) {
+    throw new Error('Public macOS releases must be Developer ID signed and notarized. Configure the Apple release secrets described in README.md.');
+  }
+}
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -22,6 +35,9 @@ const config: ForgeConfig = {
     appCategoryType: 'public.app-category.developer-tools',
     icon: packageIcon,
     osxSign: appleSigningIdentity ? { identity: appleSigningIdentity } : undefined,
+    osxNotarize: appleSigningIdentity && appleId && appleIdPassword && appleTeamId
+      ? { appleId, appleIdPassword, teamId: appleTeamId }
+      : undefined,
     extraResource: ['templates'],
     extendInfo: {
       NSMicrophoneUsageDescription: 'SpokeUI uses your microphone while you hold the speak button to transcribe edit requests.',
@@ -55,9 +71,16 @@ const config: ForgeConfig = {
   ],
   hooks: {
     postPackage: async (_forgeConfig, packageResult) => {
-      if (packageResult.platform !== 'darwin' || appleSigningIdentity) return;
+      if (packageResult.platform !== 'darwin') return;
       for (const outputPath of packageResult.outputPaths) {
-        execFileSync('codesign', ['--force', '--deep', '--sign', '-', join(outputPath, 'SpokeUI.app')], { stdio: 'inherit' });
+        const appPath = join(outputPath, 'SpokeUI.app');
+        if (!appleSigningIdentity) {
+          execFileSync('codesign', ['--force', '--deep', '--sign', '-', appPath], { stdio: 'inherit' });
+        } else if (hasNotarizationCredentials) {
+          execFileSync('codesign', ['--verify', '--deep', '--strict', '--verbose=2', appPath], { stdio: 'inherit' });
+          execFileSync('xcrun', ['stapler', 'validate', appPath], { stdio: 'inherit' });
+          execFileSync('spctl', ['--assess', '--type', 'execute', '--verbose=2', appPath], { stdio: 'inherit' });
+        }
       }
     },
   },

@@ -19,8 +19,9 @@ export async function detectRuntimes(): Promise<RuntimeInfo[]> {
   return Promise.all([detect('codex', 'codex', 'Codex'), detect('claude', 'claude', 'Claude Code')]);
 }
 
-function createPrompt(request: RuntimeRequest) {
-  const target = request.target ? JSON.stringify(request.target, null, 2) : 'No element is selected. Treat this as a page-level or project-level request.';
+export function createPrompt(request: RuntimeRequest) {
+  const targets = request.targets ?? (request.target ? [request.target] : []);
+  const target = targets.length ? JSON.stringify(targets, null, 2) : 'No element is selected. Treat this as a page-level or project-level request.';
   const evidence = request.debugContext
     ? `\nRecent browser console evidence:\n${JSON.stringify(request.debugContext.console, null, 2)}\n\nRecent network evidence:\n${JSON.stringify(request.debugContext.network, null, 2)}`
     : '';
@@ -34,7 +35,8 @@ ${intent} Follow repository instructions and the existing design system. Preserv
 Current preview: ${request.url}
 Requested outcome: ${request.instruction}
 
-Selected element snapshot:
+Selected elements (${targets.length}):
+${targets.length > 1 ? 'Apply the requested outcome to all selected elements. Resolve each target in source and account for shared components without duplicating edits.' : ''}
 ${target}${evidence}
 
 Finish with a concise answer that names relevant source files and checks. If the target or scope cannot be resolved safely, explain the exact ambiguity instead of guessing.`;

@@ -1,7 +1,7 @@
 {
   "name": "spokeui",
   "productName": "SpokeUI",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "Shape local web interfaces through voice and direct interaction.",
   "license": "MIT",

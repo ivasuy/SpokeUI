@@ -67,6 +67,7 @@ export interface RuntimeRequest {
   instruction: string;
   url: string;
   target: ElementSnapshot | null;
+  targets?: ElementSnapshot[];
   model?: string;
   reasoningEffort?: ReasoningEffort;
   debugAction?: DebugAction;
@@ -127,6 +128,7 @@ export interface AgentChange {
   instruction: string;
   debugAction?: DebugAction;
   target: ElementSnapshot | null;
+  targets?: ElementSnapshot[];
   createdAt: number;
   status: ChangeStatus;
   phase: string;
@@ -154,6 +156,7 @@ export type MicrophonePermission = 'not-determined' | 'granted' | 'denied' | 're
 export interface AppApi {
   preview: {
     setBounds(bounds: PreviewBounds): Promise<void>;
+    removeTarget(selector?: string): Promise<void>;
     show(visible: boolean): Promise<void>;
     load(url: string): Promise<void>;
     back(): Promise<void>;
@@ -188,7 +191,7 @@ export interface AppApi {
     sendAudio(chunk: ArrayBuffer): void;
     stop(): Promise<void>;
   };
-  onElementSelected(callback: (snapshot: ElementSnapshot) => void): () => void;
+  onElementSelected(callback: (snapshot: ElementSnapshot[]) => void): () => void;
   onPreviewState(callback: (state: PreviewState) => void): () => void;
   onProjectState(callback: (state: ProjectState) => void): () => void;
   onProjectsChanged(callback: (projects: StoredProject[]) => void): () => void;
