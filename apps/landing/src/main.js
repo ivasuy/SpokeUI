@@ -9,31 +9,31 @@ gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const lenis = new Lenis({ duration: reduceMotion ? 0 : 1.05, smoothWheel: !reduceMotion });
 
-const releaseUrl = 'https://github.com/ivasuy/SpokeUI/releases/tag/v0.1.2';
+const releaseUrl = 'https://github.com/ivasuy/SpokeUI/releases/tag/v0.1.3';
 const downloads = {
   macArm: {
     label: 'Download for macOS',
     shortLabel: 'Download for Mac',
-    meta: 'Apple Silicon · DMG · v0.1.2',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/SpokeUI-0.1.2-arm64.dmg',
+    meta: 'Apple Silicon · DMG · v0.1.3',
+    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/SpokeUI-0.1.3-arm64.dmg',
   },
   macIntel: {
     label: 'Download for macOS',
     shortLabel: 'Download for Mac',
-    meta: 'Intel · DMG · v0.1.2',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/SpokeUI-0.1.2-x64.dmg',
+    meta: 'Intel · DMG · v0.1.3',
+    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/SpokeUI-0.1.3-x64.dmg',
   },
   windows: {
     label: 'Download for Windows',
     shortLabel: 'Download for Windows',
-    meta: 'x64 · Installer · v0.1.2',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/SpokeUI-0.1.2.Setup.exe',
+    meta: 'x64 · Installer · v0.1.3',
+    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/SpokeUI-0.1.3.Setup.exe',
   },
   linux: {
     label: 'Download for Linux',
     shortLabel: 'Download for Linux',
-    meta: 'x64 · Debian package · v0.1.2',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.2/spokeui_0.1.2_amd64.deb',
+    meta: 'x64 · Debian package · v0.1.3',
+    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/spokeui_0.1.3_amd64.deb',
   },
   unknown: {
     label: 'Download SpokeUI',
