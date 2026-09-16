@@ -113,7 +113,6 @@ function runPreloader() {
     .from('.hero-kicker', { y: 16, opacity: 0, duration: .55 }, '-=.5')
     .from('.hero h1 > span', { yPercent: 115, rotate: 2, stagger: .08, duration: .85 }, '-=.45')
     .from('.hero-copy-row', { y: 20, opacity: 0, duration: .6 }, '-=.55')
-    .from('.hero-product', { y: 110, scale: .94, opacity: 0, duration: 1.1 }, '-=.55')
     .from('.hero-meta span', { y: 10, opacity: 0, stagger: .06, duration: .45 }, '-=.5');
 }
 
@@ -122,12 +121,6 @@ function initHeroMotion() {
     scale: 1.035,
     ease: 'none',
     scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-  });
-  gsap.to('.hero-product', {
-    y: 70,
-    scale: .98,
-    ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: '35% top', end: 'bottom top', scrub: true },
   });
 }
 
@@ -233,7 +226,48 @@ function initMagneticButtons() {
   });
 }
 
+function initEarlyAccessForm() {
+  const form = document.querySelector('[data-early-access-form]');
+  const status = document.querySelector('[data-form-status]');
+  if (!form || !status) return;
+
+  const button = form.querySelector('button[type="submit"]');
+  const buttonLabel = button.querySelector('span');
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    button.disabled = true;
+    buttonLabel.textContent = 'Joining…';
+    status.textContent = '';
+    status.className = 'form-status';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+
+      if (!response.ok) throw new Error('Signup request failed');
+
+      form.reset();
+      form.classList.add('is-complete');
+      buttonLabel.textContent = 'You’re on the list';
+      status.textContent = 'Thanks. We’ll keep the signal useful and the noise low.';
+      status.classList.add('success');
+    } catch {
+      button.disabled = false;
+      buttonLabel.textContent = 'Join early access';
+      status.textContent = 'That did not go through. Try again, or email us directly.';
+      status.classList.add('error');
+    }
+  });
+}
+
 initDownloads();
+initEarlyAccessForm();
 initShaders({ reduceMotion });
 
 if (!reduceMotion) {
