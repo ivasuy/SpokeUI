@@ -582,10 +582,10 @@ p, h1, h2, h3 { margin: 0; }
 .hero-copy-row { width: min(1020px, 100%); margin: 28px auto 0; text-align: center; }
 .hero-copy-row > .hero-copy > p { margin-inline: auto; }
 .terminal-install { display: flex; align-items: center; gap: 14px; width: fit-content; max-width: 100%; margin: 32px auto 0; padding: 8px 9px 8px 12px; border: 1px solid var(--line-light); border-radius: 999px; background: var(--ink); color: var(--paper); box-shadow: 0 8px 28px rgba(0,0,0,.18); scroll-margin-top: 110px; }
-.install-tabs { display: flex; flex-shrink: 0; gap: 4px; padding-right: 14px; border-right: 1px solid var(--line-light); }
-.install-tabs button { border: 0; padding: 6px 12px; border-radius: 999px; background: transparent; color: rgba(255,255,255,.7); font: 500 12px var(--font); cursor: pointer; }
+.install-tabs { display: flex; align-items: center; min-height: 32px; flex-shrink: 0; gap: 4px; padding-right: 14px; border-right: 1px solid var(--line-light); }
+.install-tabs button { height: 32px; border: 0; padding: 0 12px; border-radius: 999px; background: transparent; color: rgba(255,255,255,.7); font: 500 12px/32px var(--font); cursor: pointer; }
 .install-tabs button[aria-selected="true"] { background: var(--blue); color: var(--paper); }
-.install-command-row { display: flex; align-items: baseline; gap: 10px; min-width: 0; font: 12px/24px var(--mono); }
+.install-command-row { display: flex; align-items: center; gap: 10px; min-width: 0; min-height: 32px; font: 12px/32px var(--mono); }
 .install-prompt { flex-shrink: 0; color: #5d87ff; font: inherit; }
 .install-command-row code { min-width: 0; overflow-x: auto; white-space: nowrap; text-align: left; font: inherit; color: var(--paper); user-select: all; scrollbar-width: thin; }
 .install-command-row button { align-self: center; display: grid; place-items: center; flex: 0 0 32px; width: 32px; height: 32px; margin-left: 3px; border: 1px solid var(--line-light); border-radius: 50%; background: var(--ink-soft); color: var(--paper); cursor: pointer; }
