@@ -9,19 +9,12 @@ gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const lenis = new Lenis({ duration: reduceMotion ? 0 : 1.05, smoothWheel: !reduceMotion });
 
-const releaseUrl = 'https://github.com/ivasuy/SpokeUI/releases/tag/v0.1.3';
 const downloads = {
-  macArm: {
-    label: 'Download for macOS',
-    shortLabel: 'Download for Mac',
-    meta: 'Apple Silicon · DMG · v0.1.3',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/SpokeUI-0.1.3-arm64.dmg',
-  },
-  macIntel: {
-    label: 'Download for macOS',
-    shortLabel: 'Download for Mac',
-    meta: 'Intel · DMG · v0.1.3',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/SpokeUI-0.1.3-x64.dmg',
+  mac: {
+    label: 'Install for macOS',
+    shortLabel: 'Install for Mac',
+    meta: 'Apple Silicon & Intel · Terminal installer',
+    url: '#install-macos',
   },
   windows: {
     label: 'Download for Windows',
@@ -36,17 +29,17 @@ const downloads = {
     url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/spokeui_0.1.3_amd64.deb',
   },
   unknown: {
-    label: 'Download SpokeUI',
-    shortLabel: 'Download',
-    meta: 'Choose a build for your system',
-    url: releaseUrl,
+    label: 'Install SpokeUI',
+    shortLabel: 'Install',
+    meta: 'Install on macOS, Windows or Linux',
+    url: '#install-macos',
   },
 };
 
-function detectDownload(architecture = '') {
+function detectDownload() {
   const platform = `${navigator.userAgentData?.platform || navigator.platform || ''} ${navigator.userAgent || ''}`.toLowerCase();
   if (platform.includes('win')) return downloads.windows;
-  if (platform.includes('mac')) return /x86|x64|amd64/.test(architecture.toLowerCase()) ? downloads.macIntel : downloads.macArm;
+  if (platform.includes('mac')) return downloads.mac;
   if (platform.includes('linux')) return downloads.linux;
   return downloads.unknown;
 }
@@ -61,15 +54,32 @@ function applyDownload(download) {
   document.querySelectorAll('[data-download-meta]').forEach((meta) => { meta.textContent = download.meta; });
 }
 
+function initTerminalInstall() {
+  const code = document.querySelector('[data-install-command]');
+  const button = document.querySelector('[data-copy-install]');
+  const status = document.querySelector('[data-install-status]');
+  if (!code || !button || !status) return;
+  const installerUrl = new URL('install.sh', document.baseURI);
+  // Quote the URL so the command also works for preview deployments.
+  code.textContent = `curl -fsSL '${installerUrl.href.replaceAll("'", "%27")}' | bash`;
+  button.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(code.textContent);
+      button.textContent = 'Copied!';
+      status.textContent = 'Copied. Paste into Terminal to install.';
+    } catch {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(code);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+      status.textContent = 'Select and copy the command, then paste into Terminal.';
+    }
+  });
+}
+
 function initDownloads() {
   applyDownload(detectDownload());
-  const userAgentData = navigator.userAgentData;
-  if (userAgentData?.getHighEntropyValues) {
-    userAgentData.getHighEntropyValues(['architecture'])
-      .then(({ architecture }) => applyDownload(detectDownload(architecture)))
-      .catch(() => {});
-  }
-
   const platformPicker = document.querySelector('.download-options');
   document.addEventListener('pointerdown', (event) => {
     if (platformPicker?.open && !platformPicker.contains(event.target)) platformPicker.removeAttribute('open');
@@ -267,6 +277,7 @@ function initEarlyAccessForm() {
 }
 
 initDownloads();
+initTerminalInstall();
 initEarlyAccessForm();
 initShaders({ reduceMotion });
 

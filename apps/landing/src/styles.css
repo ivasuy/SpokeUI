@@ -573,3 +573,31 @@ p, h1, h2, h3 { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
 }
+
+/* A centered install flow aligned with the hero headline and preview. */
+.terminal-install { margin: 28px auto 0; width: 100%; max-width: 680px; min-width: 0; scroll-margin-top: 110px; }
+.terminal-install > strong { font-size: 14px; }
+.hero-copy .terminal-install p { margin: 8px 0 12px; font-size: 13px; line-height: 1.5; }
+.install-command-row { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid rgba(255,255,255,.2); border-radius: 10px; background: rgba(0,0,0,.3); }
+.install-command-row code { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 12px; line-height: 1.7; user-select: all; text-align: left; }
+.install-command-row button { flex-shrink: 0; padding: 9px 12px; border: 1px solid rgba(255,255,255,.3); border-radius: 6px; background: transparent; color: inherit; cursor: pointer; }
+.install-command-row button:hover { background: rgba(255,255,255,.12); }
+.install-command-row button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.terminal-install > small { display: block; margin-top: 10px; font-size: 11px; line-height: 1.6; opacity: .75; }
+.terminal-install a { text-decoration: underline; }
+.install-status { display: block; min-height: 1.6em; margin-top: 6px; font-size: 12px; }
+
+/* Let the preview follow the installer instead of overlapping it at fixed offsets. */
+.hero { height: auto; padding-bottom: 150px; }
+.hero-product { position: relative; top: auto; left: auto; margin: 64px auto 0; transform: none; }
+
+.hero h1 { justify-content: center; text-align: center; }
+.hero-copy-row { width: min(680px, 100%); margin: 28px auto 0; text-align: center; }
+.hero-copy-row > .hero-copy > p { margin-inline: auto; }
+.hero-copy .terminal-install p { max-width: none; }
+.hero-copy .download-options { margin: 12px auto 0; }
+.hero-copy .download-menu { left: 50%; transform: translateX(-50%); text-align: left; }
+@media (max-width: 680px) {
+  .install-command-row { gap: 8px; padding: 12px; }
+  .install-command-row code { font-size: 11px; }
+}

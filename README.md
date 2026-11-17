@@ -30,7 +30,19 @@ Download the latest build from [GitHub Releases](https://github.com/ivasuy/Spoke
 - Windows: `SpokeUI Setup.exe` or the portable ZIP
 - Debian/Ubuntu Linux: DEB or the portable ZIP
 
-Release builds are currently unsigned. macOS may require right-clicking SpokeUI and choosing **Open** the first time; Windows may show a SmartScreen prompt.
+### macOS Terminal install
+
+Paste this command into Terminal (Apple Silicon and Intel are detected automatically):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ivasuy/SpokeUI/main/apps/landing/public/install.sh | bash
+```
+
+The installer downloads v0.1.3, verifies its pinned SHA-256 checksum and application signature, and installs into `~/Applications` without sudo or an administrator password. Open `SpokeUI.app` from that folder afterward. Existing installations are left untouched; quit and move the old copy to Trash before reinstalling. Your app data is retained.
+
+You can inspect [the installer](apps/landing/public/install.sh) before running it. The landing page serves the same script at `/install.sh`. When upgrading the installer, update its version and both checksums together from the published release assets.
+
+Mac builds use ad hoc signing and are not Apple-notarized. Terminal installation does not disable Gatekeeper or remove quarantine attributes, and macOS can still block launch. If blocked, review the app in **System Settings → Privacy & Security** and use **Open Anyway** if available and you trust the download. Microphone permission remains a separate macOS prompt. Windows may show a SmartScreen prompt.
 
 SpokeUI runs projects on your machine. Install Node.js 22+ and at least one supported local agent runtime, [Codex](https://github.com/openai/codex) or [Claude Code](https://docs.anthropic.com/en/docs/claude-code), before opening a project. The relevant CLI must be authenticated locally.
 
