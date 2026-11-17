@@ -59,7 +59,7 @@ curl -fsSL https://spokeui.vercel.app/install-linux.sh | bash
 Windows x64 — run in **Command Prompt (cmd.exe)**:
 
 ```bat
-curl.exe -fsSL https://spokeui.vercel.app/install.ps1 | powershell -NoProfile -Command -
+curl.exe -fsSL https://spokeui.vercel.app/install.ps1 | powershell -c -
 ```
 
 Both installers verify pinned SHA-256 checksums for v0.1.3 before invoking the platform installer. Windows setup retains its normal prompts. Other Linux distributions and ARM Linux/Windows are not supported by these installers.

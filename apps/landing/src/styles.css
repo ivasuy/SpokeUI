@@ -586,7 +586,7 @@ p, h1, h2, h3 { margin: 0; }
 .install-tabs button { border: 0; padding: 6px 12px; border-radius: 999px; background: transparent; color: rgba(255,255,255,.7); font: 500 12px var(--font); cursor: pointer; }
 .install-tabs button[aria-selected="true"] { background: #55565b; color: #fff; }
 .install-command-row { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.install-prompt { color: #fc8548; font: 600 14px var(--mono); }
+.install-prompt { color: var(--blue); font: 600 14px var(--mono); }
 .install-command-row code { min-width: 0; overflow-x: auto; white-space: nowrap; text-align: left; font: 12px/1.8 var(--mono); user-select: all; scrollbar-width: thin; }
 .install-command-row button { display: grid; place-items: center; flex: 0 0 32px; width: 32px; height: 32px; margin-left: 3px; border: 1px solid rgba(255,255,255,.24); border-radius: 50%; background: rgba(255,255,255,.08); color: #fff; cursor: pointer; }
 .install-command-row button:hover { background: rgba(255,255,255,.18); }

@@ -20,7 +20,7 @@ function initTerminalInstall() {
   const commands = {
     mac: `curl -fsSL ${origin}/install.sh | bash`,
     linux: `curl -fsSL ${origin}/install-linux.sh | bash`,
-    windows: `curl.exe -fsSL ${origin}/install.ps1 | powershell -NoProfile -Command -`,
+    windows: `curl.exe -fsSL ${origin}/install.ps1 | powershell -c -`,
   };
   let resetCopy;
   function selectPlatform(platform) {
