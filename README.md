@@ -46,6 +46,24 @@ Mac builds use ad hoc signing and are not Apple-notarized. Terminal installation
 
 SpokeUI runs projects on your machine. Install Node.js 22+ and at least one supported local agent runtime, [Codex](https://github.com/openai/codex) or [Claude Code](https://docs.anthropic.com/en/docs/claude-code), before opening a project. The relevant CLI must be authenticated locally.
 
+### Linux and Windows Terminal install
+
+The landing page's platform tabs provide these commands:
+
+Linux (Debian/Ubuntu, x86_64; apt may request your password):
+
+```bash
+curl -fsSL https://spokeui.vercel.app/install-linux.sh | bash
+```
+
+Windows x64 — run in **Command Prompt (cmd.exe)**:
+
+```bat
+curl.exe -fsSL https://spokeui.vercel.app/install.ps1 | powershell -NoProfile -Command -
+```
+
+Both installers verify pinned SHA-256 checksums for v0.1.3 before invoking the platform installer. Windows setup retains its normal prompts. Other Linux distributions and ARM Linux/Windows are not supported by these installers.
+
 ## Run from source
 
 Requirements: Node.js 22+, pnpm 11+, and an authenticated Codex or Claude Code installation.

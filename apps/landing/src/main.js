@@ -9,80 +9,72 @@ gsap.registerPlugin(ScrollTrigger);
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const lenis = new Lenis({ duration: reduceMotion ? 0 : 1.05, smoothWheel: !reduceMotion });
 
-const downloads = {
-  mac: {
-    label: 'Install for macOS',
-    shortLabel: 'Install for Mac',
-    meta: 'Apple Silicon & Intel · Terminal installer',
-    url: '#install-macos',
-  },
-  windows: {
-    label: 'Download for Windows',
-    shortLabel: 'Download for Windows',
-    meta: 'x64 · Installer · v0.1.3',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/SpokeUI-0.1.3.Setup.exe',
-  },
-  linux: {
-    label: 'Download for Linux',
-    shortLabel: 'Download for Linux',
-    meta: 'x64 · Debian package · v0.1.3',
-    url: 'https://github.com/ivasuy/SpokeUI/releases/download/v0.1.3/spokeui_0.1.3_amd64.deb',
-  },
-  unknown: {
-    label: 'Install SpokeUI',
-    shortLabel: 'Install',
-    meta: 'Install on macOS, Windows or Linux',
-    url: '#install-macos',
-  },
-};
-
-function detectDownload() {
-  const platform = `${navigator.userAgentData?.platform || navigator.platform || ''} ${navigator.userAgent || ''}`.toLowerCase();
-  if (platform.includes('win')) return downloads.windows;
-  if (platform.includes('mac')) return downloads.mac;
-  if (platform.includes('linux')) return downloads.linux;
-  return downloads.unknown;
-}
-
-function applyDownload(download) {
-  document.querySelectorAll('[data-download-cta]').forEach((link) => {
-    link.href = download.url;
-    link.setAttribute('aria-label', `${download.label}. ${download.meta}`);
-    const label = link.querySelector('[data-download-label]');
-    if (label) label.textContent = link.dataset.downloadLabelStyle === 'short' ? download.shortLabel : download.label;
-  });
-  document.querySelectorAll('[data-download-meta]').forEach((meta) => { meta.textContent = download.meta; });
-}
-
 function initTerminalInstall() {
   const code = document.querySelector('[data-install-command]');
-  const button = document.querySelector('[data-copy-install]');
+  const copy = document.querySelector('[data-copy-install]');
   const status = document.querySelector('[data-install-status]');
-  if (!code || !button || !status) return;
-  const installerUrl = new URL('install.sh', document.baseURI);
-  // Quote the URL so the command also works for preview deployments.
-  code.textContent = `curl -fsSL '${installerUrl.href.replaceAll("'", "%27")}' | bash`;
-  button.addEventListener('click', async () => {
+  const panel = document.querySelector('#install-command');
+  const tabs = [...document.querySelectorAll('[data-install-platform]')];
+  if (!code || !copy || !status || !panel) return;
+  const origin = window.location.origin;
+  const commands = {
+    mac: `curl -fsSL ${origin}/install.sh | bash`,
+    linux: `curl -fsSL ${origin}/install-linux.sh | bash`,
+    windows: `curl.exe -fsSL ${origin}/install.ps1 | powershell -NoProfile -Command -`,
+  };
+  let resetCopy;
+  function selectPlatform(platform) {
+    tabs.forEach((tab) => {
+      const selected = tab.dataset.installPlatform === platform;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    });
+    panel.setAttribute('aria-labelledby', `tab-${platform}`);
+    panel.title = platform === 'windows' ? 'Run in Command Prompt (cmd.exe)' : 'Run in Terminal';
+    code.textContent = commands[platform];
+    copy.classList.remove('is-copied');
+    copy.title = 'Copy command';
+    status.textContent = '';
+    clearTimeout(resetCopy);
+  }
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectPlatform(tab.dataset.installPlatform));
+    tab.addEventListener('keydown', (event) => {
+      let next;
+      if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+      if (event.key === 'ArrowLeft') next = (index + tabs.length - 1) % tabs.length;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = tabs.length - 1;
+      if (next === undefined) return;
+      event.preventDefault();
+      selectPlatform(tabs[next].dataset.installPlatform);
+      tabs[next].focus();
+    });
+  });
+  copy.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(code.textContent);
-      button.textContent = 'Copied!';
-      status.textContent = 'Copied. Paste into Terminal to install.';
+      copy.classList.add('is-copied');
+      copy.title = 'Copied!';
+      status.textContent = 'Command copied.';
+      clearTimeout(resetCopy);
+      resetCopy = setTimeout(() => { copy.classList.remove('is-copied'); copy.title = 'Copy command'; }, 2000);
     } catch {
-      const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(code);
+      const selection = window.getSelection();
       selection?.removeAllRanges();
       selection?.addRange(range);
-      status.textContent = 'Select and copy the command, then paste into Terminal.';
+      status.textContent = 'Select and copy the command.';
     }
   });
-}
-
-function initDownloads() {
-  applyDownload(detectDownload());
-  const platformPicker = document.querySelector('.download-options');
-  document.addEventListener('pointerdown', (event) => {
-    if (platformPicker?.open && !platformPicker.contains(event.target)) platformPicker.removeAttribute('open');
+  const platform = `${navigator.userAgentData?.platform || navigator.platform || ''}`.toLowerCase();
+  selectPlatform(platform.includes('win') ? 'windows' : platform.includes('linux') ? 'linux' : 'mac');
+  document.querySelectorAll('[data-download-cta]').forEach((link) => {
+    link.href = '#install';
+    link.setAttribute('aria-label', 'Install SpokeUI');
+    const label = link.querySelector('[data-download-label]');
+    if (label) label.textContent = 'Install SpokeUI';
   });
 }
 
@@ -276,7 +268,6 @@ function initEarlyAccessForm() {
   });
 }
 
-initDownloads();
 initTerminalInstall();
 initEarlyAccessForm();
 initShaders({ reduceMotion });
